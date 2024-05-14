@@ -6,8 +6,6 @@ import Cart from './pages/Cart'
 import Login from './pages/Login'
 import Product from "./pages/Product";
 import Footer from "./components/Footer";
-import Admin from "./pages/Admin";
-import AddProduct from "./components/AddProduct";
 
 export default function App() {
   return (
@@ -24,9 +22,9 @@ export default function App() {
         </Route>
         <Route path="/cart-page" element={<Cart />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin/*" element={<Admin />} >
+      
          
-        </Route>
+      
         
         
       </Routes>

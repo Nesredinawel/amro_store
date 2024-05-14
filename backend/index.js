@@ -26,6 +26,8 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage:storage})
+
+
 //creating upload endpoint for images
 app.use('/images', express.static(path.join('upload/images')))
 
@@ -123,6 +125,177 @@ app.get('/allproducts', async (req, res)=> {
     console.log("all product fetched")
     res.send(products)
 });
+
+
+
+
+
+
+// Schema user model
+const User = mongoose.model('user',{
+    name:{
+        type:String,
+    },
+    email:{
+        type:String,
+        unique:true,
+    },
+    password:{
+        type:String,
+        
+    },
+    carData:{
+        type:Object,   
+    },
+    date:{
+        type:Date,
+        default:Date.now,
+    },
+    description:{
+        type:String,
+    },
+    location:{
+        type:String,
+    },
+    image:{
+       type:String
+    }
+    })
+    
+    
+    
+    
+    // creating endpoint  for registering the user
+    app.post('/signup', async(req, res)=>{
+    let check = await User.findOne({email: req.body.email});
+    let necheck = await User.findOne({name: req.body.username});
+   if(necheck) {
+    return res.status(400).json({success:false, errors:"This name is already in use try Another"})
+   }
+
+    if(check){
+    return res.status(400).json({success: false, errors:"Existing user found with same email address"})
+    }
+    let cart ={};
+    for (let i =0; i<300; i++) {
+    cart[i] = 0;
+    
+    }
+    const user = new User({
+    name:req.body.username,
+    email:req.body.email,
+    password:req.body.password,
+    cartData:cart,
+    })
+    await user.save();
+    
+    const data = {
+    user: {
+    id:user.id}}
+    
+    const token = jwt.sign(data, 'secret_ecom');
+    res.json({success:true,token})
+    
+    })
+    
+    
+    
+    // creating endpoint for user login
+    app.post('/login', async (req, res)=>{
+        let user = await User.findOne({email: req.body.email});
+        if(user){
+            const passMatch = req.body.password === user.password;
+              if(passMatch) {
+                const data = {
+                    user: {
+                    id:user.id
+    
+                }}
+             
+    
+                
+                    const token = jwt.sign(data, 'secret_ecom');
+                    res.json({success:true,token})
+               
+        }
+
+        else {
+            res.json({success:false, errors:"Wrong Password"})
+        }
+        
+    }
+    else{
+        res.json({success:false, errors:"Wrong Email address"})
+    }
+    })
+
+
+
+// profile image storage engine
+const profileimg = multer.diskStorage({
+    destination:'./upload/images/profileimg',
+    filename:(req,file, cb) => {
+        return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    }
+})
+
+const profileup = multer({storage:profileimg})
+//creating upload endpoint for images
+app.use('/images', express.static(path.join('upload/images/profileimg')))
+
+app.post("/profileup" , profileup.single('profile'), (req,res) => {
+res.json({
+    success:1,
+    image_url:`http://localhost:${port}/images/profileimg/${req.file.filename}`
+})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+app.post('/profile', async (req, res) => {
+    const profile = new User({
+       image:req.body.image,
+
+     
+        })
+        await profile.save();
+        
+        const data = {
+        user: {
+        id:profile.id}}
+        
+        const token = jwt.sign(data, 'secret_ecom');
+        res.json({success:true,token})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
