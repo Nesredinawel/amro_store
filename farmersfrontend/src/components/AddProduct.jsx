@@ -1,7 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import upload_area from '../assets/upload_area.svg'
 import {MdAdd} from 'react-icons/md'
 const AddProduct = () => {
+
+    useEffect(() => {
+        // Retrieve formData from localStorage
+        const storedFormData = localStorage.getItem('formData');
+        if (storedFormData) {
+          const parsedFormData = JSON.parse(storedFormData);
+         
+          
+           // Pre-fill detaildes state with the email from formData
+           setproductDetails({ email: parsedFormData});
+    
+          // Clear formData from localStorage after retrieving it
+          // localStorage.removeItem('formData');
+        }
+      }, []);
+
+
 
 
      // setting product atribute
@@ -11,7 +28,8 @@ const AddProduct = () => {
         image:"",
     category:"fruit",
 price:"",
-description:"",    }
+description:"", 
+email:""   }
 
     )
     const imageHandler = (e) => {
@@ -65,7 +83,7 @@ description:"",    }
   return (
     <div className='p-8 box-border bg-white w-full rounded-sm mt-4 lg:m-7'>
         <div className='mb-3'>
-            <h4 className='bold-18 pb-2'>Product title:</h4>
+            <h4 className='bold-18 pb-2'>Product Name:</h4>
             <input value={productDetails.name} onChange={ChangeHandler} type="text" name='name' placeholder='Type here..' className='bg-primary outline-none max-w-80 w-full py-3 px-4 rounded-md' />
 
         </div>
@@ -87,7 +105,7 @@ description:"",    }
             <h4>Product Category:</h4>
             <select value={productDetails.category} onChange={ChangeHandler} name="category" id="" className='bg-primary ring-1 ring-slate-900/20 medium-16 rounded-sm outline-none'>
              
-                <option  value="fruit">Fruit</option>
+                <option  defaultValue="fruit">Fruit</option>
                 <option value="vegetable">Vegetable</option>
                 <option value="creal">Creal</option>
             </select>

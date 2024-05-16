@@ -73,66 +73,19 @@ const Product = mongoose.model("product", {
     type:Boolean,
     default:true,
     },
+    user: {
+        type: String,
+        required: true
+      }
 })
-
-//creatng api for add products
-app.post('/addproduct', async(req, res) => {
-    let products = await Product.find({});
-    let id;
-    if(products.length > 0){
-        let last_product_array = products.slice(-1);
-        let last_product = last_product_array[0];
-        id = last_product.id +1;
-    } else {
-        id =1;
-    }
-    const product = new Product({
-        id:id,
-        name:req.body.name,
-        image:req.body.image,
-        category: req.body.category,
-        price:req.body.price,
-        description:req.body.description,
-
-    });
-    console.log(product);
-    await product.save();
-console.log("Saved")
-
-res.json({
-    success:true,
-    name:req.body.name,
-})
-})
-
-
-// creating api for remove products
-app.post('/removeproduct' , async(req, res)=> {
-    await Product.findOneAndDelete({id:req.body.id});
-    console.log("Removed");
-    res.json({
-        success:true,
-        name: req.body.name,
-
-    })
-})
-
-
-
-// creating api for get all_products
-app.get('/allproducts', async (req, res)=> {
-    let products = await Product.find({});
-    console.log("all product fetched")
-    res.send(products)
-});
-
-
 
 
 
 
 // Schema user model
 const User = mongoose.model('user',{
+
+ 
     name:{
         type:String,
     },
@@ -161,6 +114,73 @@ const User = mongoose.model('user',{
        type:String
     }
     })
+
+
+
+//creatng api for add products
+app.post('/addproduct', async(req, res) => {
+    let products = await Product.find({});
+    let id;
+    if(products.length > 0){
+        let last_product_array = products.slice(-1);
+        let last_product = last_product_array[0];
+        id = last_product.id +1;
+    } else {
+        id =1;
+    }
+   
+    const product = new Product({
+        id:id,
+        name:req.body.name,
+        image:req.body.image,
+        category: req.body.category,
+        price:req.body.price,
+        description:req.body.description,
+        user:req.body.email,
+
+    });
+    console.log(product);
+    await product.save();
+console.log("Saved")
+
+res.json({
+    success:true,
+    name:req.body.name,
+})
+})
+
+
+// creating api for remove products
+app.post('/removeproduct' , async(req, res)=> {
+    await Product.findOneAndDelete({id:req.body.id});
+    console.log("Removed");
+    res.json({
+        success:true,
+        name: req.body.name,
+
+    })
+})
+
+// creating api for get userproduct
+app.post('/userproduct', async (req, res)=> {
+    let products = await Product.find({user: req.body.email });
+    console.log("all product fetched")
+    console.log(products)
+    res.send(products)
+});
+
+// creating api for get all_products
+app.get('/allproducts', async (req, res)=> {
+    let products = await Product.find({});
+    console.log("all product fetched")
+    res.send(products)
+});
+
+
+
+
+
+
     
     
     
@@ -168,8 +188,8 @@ const User = mongoose.model('user',{
     // creating endpoint  for registering the user
     app.post('/signup', async(req, res)=>{
     let check = await User.findOne({email: req.body.email});
-    let necheck = await User.findOne({name: req.body.username});
-   if(necheck) {
+    let nacheck = await User.findOne({name: req.body.username});
+   if(nacheck) {
     return res.status(400).json({success:false, errors:"This name is already in use try Another"})
    }
 
@@ -185,6 +205,8 @@ const User = mongoose.model('user',{
     name:req.body.username,
     email:req.body.email,
     password:req.body.password,
+  
+
     cartData:cart,
     })
     await user.save();
@@ -254,34 +276,52 @@ res.json({
 
 
 
+// add profile detail
+app.post('/addprofile', async(req,res) => {
+        let user = await User.findOneAndUpdate({
+            email:req.body.email,},       
+           {
+            "name":req.body.username,
+            "image":req.body.image,
+            "description":req.body.description,
+            "location":req.body.location,});
+         console.log(user);
+        
+        
+       
+        console.log("profile saved")
+        res.json({
+            success:true,
+            location:req.body.location,
+            email:req.body.email,
+        })
+    }
+);
 
 
+app.post('/profiledetail', async (req, res)=> {
+    let userprofile = await User.find({ email:req.body.email});
+    console.log(userprofile)
+    console.log("profiledetail fetched")
+    res.send(userprofile)
+} )
 
-
-
-
-
-
-
-
-
-
-    
-app.post('/profile', async (req, res) => {
-    const profile = new User({
-       image:req.body.image,
+   
+// app.post('/profile', async (req, res) => {
+//     const profile = new User({
+//        image:req.body.image,
 
      
-        })
-        await profile.save();
+//         })
+//         await profile.save();
         
-        const data = {
-        user: {
-        id:profile.id}}
+//         const data = {
+//         user: {
+//         id:profile.id}}
         
-        const token = jwt.sign(data, 'secret_ecom');
-        res.json({success:true,token})
-})
+//         const token = jwt.sign(data, 'secret_ecom');
+//         res.json({success:true,token})
+// })
 
 
 
