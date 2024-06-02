@@ -5,7 +5,7 @@ import Item from '../components/Item'
 import { NavLink } from 'react-router-dom'
 import { ShopContext } from '../Context/ShopContext'
 
-const Category = ({category, banner}) => {
+const Category = ({category}) => {
 
   const {all_products} = useContext(ShopContext)
   return (
@@ -14,26 +14,17 @@ const Category = ({category, banner}) => {
   
 
     {/* container */}
-    <div className='max_padd_container container mx-auto mt-8 xl:py-20'>
+    <div className='max_padd_container container mx-auto mt-8 py-20'>
     <div className=' space-y-6 columns-2 md:columns-3 lg:columns-4 border-separate rounded-lg'>
       {all_products.map((item) => {
         if(category === item.category){
-          return <Item key={item.id} id={item.id} image={item.image} name={item.name} price={item.price} />
+          return <Item key={item.productid} productid={item.productid} productimage={item.productimage}  userimage={item.userimage}  productname={item.productname}  username={item.username}  price={item.price} email={item.email} date={item.date} />
 
         }
       })}
     </div>
     </div>
-    <div className='mt-16 text-center'>
-      <button className='btn_dark_rounded'>Load more</button>
-    </div>
-    <div className='fixed bottom-4 right-4'>
-  <NavLink to={'/admin/addproduct'} className={"btn_secondary_rounded flexCenter gap-x-2 medium-16"}>
-                 
-                  
-                 Add Product
-               </NavLink>
-  </div>
+    
    </section>
   )
 }

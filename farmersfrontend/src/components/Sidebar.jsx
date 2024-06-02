@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import orderproduct from '../assets/orderedproduct.png'
 import userprofile from '../assets/userprofile.png'
 import addproduct from '../assets/addproduct.png'
 import listproduct from '../assets/productlist.png'
@@ -20,6 +21,12 @@ const Sidebar = () => {
             <button className='flexCenter gap-2 rounded-md bg-primary h-12 w-44 medium-14 sm:medium-16'>
                 <img src={listproduct} height={44} width={44} alt="" />
                 <span>Product List</span>
+            </button>
+        </Link>
+        <Link to={'/orderedproduct'}>
+            <button className='flexCenter gap-2 rounded-md bg-primary h-12 w-44 medium-14 sm:medium-16'>
+                <img src={orderproduct} height={44} width={44} alt="" />
+                <span>OrderProduct</span>
             </button>
         </Link>
     </div>

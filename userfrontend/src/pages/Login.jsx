@@ -1,9 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 
-  const Login = () => {
+  const Login = () => {  
+     const navigate = useNavigate();
+
     const [state, setState] = useState("Login");
     const [formData, setformData] = useState({
       username:"",
@@ -17,48 +20,60 @@ import { useState } from 'react'
     }
 
 
-    // login function
-    const login = async () => {
-   console.log("login function executed", formData);
-   let responseData;
-   await fetch('http://localhost:4000/login' , {
-     method:"POST",
-     headers:{
-       Accept:'application/formData',
-       'Content-Type' : 'application/json'
-     },
-     body:JSON.stringify(formData)
-   }).then((response)=> response.json()).then((data)=> responseData=data)
-   if(responseData.success){
-     localStorage.setItem('auth-token', responseData.token);
-     window.location.replace('/');
-   }
-   else{
-     alert(responseData.errors)
-   }
-    }
-
-
-// setting registration information
-    const signup = async () => {
-   console.log("Signup function executed", formData);
+  // login function
+  const login = async () => {
+    console.log("login function executed", formData);
     let responseData;
-await fetch('http://localhost:4000/signup' , {
-  method:"POST",
-  headers:{
-    Accept:'application/formData',
-    'Content-Type':'application/json'
-  },
-  body:JSON.stringify(formData)
-}).then((response)=> response.json()).then((data)=> responseData=data)
-if(responseData.success){
-  localStorage.setItem('auth-token', responseData.token);
-  window.location.replace('/');
-}
-else{
-  alert(responseData.errors)
-}
+    await fetch('http://localhost:4000/login' , {
+      method:"POST",
+      headers:{
+        Accept:'application/formData',
+        'Content-Type' : 'application/json'
+      },
+      body:JSON.stringify(formData)
+    }).then((response)=> response.json()).then((data)=> responseData=data)
+    if(responseData.success){
+      localStorage.setItem('auth-token', responseData.token);
+
+        // Store formData in localStorage
+        localStorage.setItem('formData', JSON.stringify(formData.email));
+        // Redirect to home page
+   navigate('/home');
     }
+    else{
+      alert(responseData.errors)
+    }
+ 
+    
+     }
+ 
+  
+ 
+ 
+ // setting registration information
+     const signup = async () => {
+    console.log("Signup function executed", formData);
+     let responseData;
+ await fetch('http://localhost:4000/signup' , {
+   method:"POST",
+   headers:{
+     Accept:'application/formData',
+     'Content-Type':'application/json'
+   },
+   body:JSON.stringify(formData)
+ }).then((response)=> response.json()).then((data)=> responseData=data)
+ if(responseData.success){
+   localStorage.setItem('auth-token', responseData.token);
+      
+        // Store formData in localStorage
+        localStorage.setItem('formData', JSON.stringify(formData.email));
+        // Redirect to home page
+   navigate('/');
+ }
+ else{
+   alert(responseData.errors)
+ }
+     }
   
   return (
   <section className='max_padd_container flexCenter flex-col pt-32'>

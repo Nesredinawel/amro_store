@@ -10,7 +10,7 @@ import RelatedProducts from '../components/RelatedProducts';
 const Product = () => {
   const {all_products} = useContext(ShopContext);
   const {productId} = useParams();
-  const product  = all_products.find((e) => e.id === Number(productId));
+  const product  = all_products.find((e) => e.productid === Number(productId));
   if(!product){
     return <div> Product not Found! </div>
   }
@@ -20,7 +20,7 @@ const Product = () => {
       <ProductHd  product ={product}/>
       <ProductDisplay product={product}/>
       
-      <RelatedProducts />
+ 
     </div>
   </section>
   )

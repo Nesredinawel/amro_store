@@ -76,7 +76,9 @@
   .btn_secondary_rounded  { 
     @apply  medium-15 border border-secondary bg-secondary px-7 py-3 text-white transition-all hover:bg-[#078029] rounded-full 
   }
-
+  .btn_remove_rounded  { 
+    @apply  medium-15 border border-red-700 bg-red-700 px-7 py-3 text-white transition-all hover:bg-[#ea5151] rounded-full 
+  }
   .max-container {
     @apply mx-auto max-w-[1440px];
   }

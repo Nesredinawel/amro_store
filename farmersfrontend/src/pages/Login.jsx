@@ -33,16 +33,17 @@ import { useNavigate } from 'react-router-dom';
    }).then((response)=> response.json()).then((data)=> responseData=data)
    if(responseData.success){
      localStorage.setItem('auth-token', responseData.token);
-     navigate('/')
+    
+       // Store formData in localStorage
+       localStorage.setItem('formData', JSON.stringify(formData.email));
+       // Redirect to home page
+  navigate('/profile');
    }
    else{
      alert(responseData.errors)
    }
 
-     // Store formData in localStorage
-     localStorage.setItem('formData', JSON.stringify(formData.email));
-         // Redirect to home page
-    navigate('/');
+   
     }
 
  
@@ -62,7 +63,11 @@ await fetch('http://localhost:4000/signup' , {
 }).then((response)=> response.json()).then((data)=> responseData=data)
 if(responseData.success){
   localStorage.setItem('auth-token', responseData.token);
-  window.location.replace('./');
+    
+       // Store formData in localStorage
+       localStorage.setItem('formData', JSON.stringify(formData.email));
+       // Redirect to home page
+  navigate('/profile');
 }
 else{
   alert(responseData.errors)

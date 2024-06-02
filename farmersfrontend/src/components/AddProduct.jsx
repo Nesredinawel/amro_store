@@ -75,6 +75,16 @@ email:""   }
         body:JSON.stringify(product),}).then((resp) => resp.json()).then((data) => {
             data.success?alert("product Added"):alert("Upload Failed")
         })
+
+        await fetch('http://localhost:4000/userpro',{
+            method:'POST',
+            headers:{
+                Accept:'application/json',
+               'Content-Type' :'application/json'
+            },
+            body:JSON.stringify(product),}).then((resp) => resp.json()).then((data) => {
+                data.success?alert("userproduct Added to the user"):alert("Upload  Added to the user")
+            })
    }
 }
 
@@ -90,7 +100,7 @@ email:""   }
 
         <div className='mb-3'>
             <h4 className='bold-18 pb-2'>Price:</h4>
-            <input value={productDetails.price} onChange={ChangeHandler} type="text" name='price' placeholder='Type here..' className='bg-primary outline-none max-w-80 w-full py-3 px-4 rounded-md' />
+            <input value={productDetails.price} onChange={ChangeHandler}  type="number"  min="0"  name='price' placeholder='Type here..' className='bg-primary outline-none max-w-80 w-full py-3 px-4 rounded-md' />
 
         </div>
         <div className='mb-3'>
@@ -105,7 +115,7 @@ email:""   }
             <h4>Product Category:</h4>
             <select value={productDetails.category} onChange={ChangeHandler} name="category" id="" className='bg-primary ring-1 ring-slate-900/20 medium-16 rounded-sm outline-none'>
              
-                <option  defaultValue="fruit">Fruit</option>
+                <option  value="fruit">Fruit</option>
                 <option value="vegetable">Vegetable</option>
                 <option value="creal">Creal</option>
             </select>

@@ -5,30 +5,31 @@ import { ShopContext } from '../Context/ShopContext'
 const CartItems = () => {
     const {all_products, cartItems,removeFromCart , getTotalCartAmount,getTotalCartItems} = useContext(ShopContext)
   return (
-    <section className='max_padd_container pt-28'>
+    <section className='max_padd_container pt-20 w-full '>
         <table className='w-full mx-auto'>
             <thead>
                 <tr className='bg-slate-900/10 regular-18 sm:regular-22 text-start py-12'>
                     <th className='p-1 py-2'>Products</th>
                     <th className='p-1 py-2'>Title</th>
                     <th className='p-1 py-2'>Price</th>
-                    <th className='p-1 py-2'>Quality</th>
+                    <th className='p-1 py-2'>Quantity</th>
                     <th className='p-1 py-2'>Total</th>
-                    <th className='p-1 py-2'>Remove</th>
+                    <th className=' '></th>
                 </tr>
             </thead>
             <tbody>
                 {all_products.map((e) => {
-                    if (cartItems[e.id] > 0) {
-                        return <tr className='border-b border-slate-900/20 p-6 medium-14 text-center' key={e.id}>
-                            <td className='flexCenter'><img className='rounded-lg ring-1 ring-slate-900/5 my-1 h-14 object-fill w-10' src={e.image} alt="prodimg" /></td>
-                            <td><div className='line-clamp-3 '>{e.name}</div></td>
+                    if (cartItems[e.productid] > 0) {
+                        return <tr className='border-b border-slate-900/20 p-6 medium-14 text-center' key={e.productid}>
+                            <td className='flexCenter'><img className='rounded-lg ring-1 ring-slate-900/5 my-1 h-14 object-fill w-10' src={e.productimage} alt="prodimg" /></td>
+                            <td><div className='line-clamp-3 '>{e.productname}</div></td>
                             <td className='w-16 h-16 bg-white'>${e.price}</td>
-                            <td>{cartItems[e.id]}</td>
-                            <td>${e.price * cartItems[e.id]}</td>
+                            <td>{cartItems[e.productid]}</td>
+
+                            <td>${e.price * cartItems[e.productid]}</td>
                           
                             <td>
-                                <div className=' flex bold-22 pl-10 hover:text-red-950'><TbTrash onClick={() => removeFromCart(e.id)}/></div>
+                            <td><div className='bold-22 pl-80 sm:pl-14 flexCenter'><TbTrash onClick={() => removeFromCart(e.productid)} className='text-red-900 hover:text-red-600' /></div></td>
                             </td>
                         </tr>
                     }
@@ -52,7 +53,7 @@ const CartItems = () => {
                         <h4 className='bold-18'>Total price:</h4>
                         <h4 className='bold-18'>${getTotalCartAmount()}</h4>
                     </div>
-                    <button className='btn_dark_rounded w-44'>Checkout</button>
+                  
                   
             </div>
         </div>

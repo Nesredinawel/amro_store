@@ -2,7 +2,7 @@
 
 const NewsLetter = () => {
   return (
-  <section className="mex_padd_container 
+  <section className="max_padd_container 
   py-12 xl:py-28 bg-white">
     <div className="mx-auto xl:w-[80%] flexCenter
      flex-col gap-y-8 w-full max-w-[666px]">

@@ -7,6 +7,7 @@ const multer = require("multer")
 const path =require("path")
 const cors = require("cors");
 const { type } = require("os");
+const { ObjectId } = require("mongodb");
 
 app.use(express.json());
 app.use(cors());
@@ -73,10 +74,11 @@ const Product = mongoose.model("product", {
     type:Boolean,
     default:true,
     },
-    user: {
+    email: {
         type: String,
         required: true
-      }
+      },
+    
 })
 
 
@@ -116,6 +118,250 @@ const User = mongoose.model('user',{
     })
 
 
+// Schema userproduct model
+    const UserProduct = mongoose.model('userproduct',{
+
+        userId: { type: mongoose.Types.ObjectId, ref: 'user', required: true },
+        productId: { type: mongoose.Types.ObjectId, ref: 'product', required: true },
+        email: { type: String, required: true },
+        emailpr: { type: String, required: true },
+        productid: {
+            type: Number ,
+            required:true,
+        },
+        username:{
+            type:String,
+        },
+        productname:{
+            type:String,
+        },
+        userimage:{
+            type:String
+         },
+         productimage: {
+            type: String,
+            required:true
+        },
+         
+          category:{ 
+        type:String,
+        required:true,
+          },
+          price:{
+        type:Number,
+        required:true,
+             },
+             location:{
+                type:String,
+            },
+         description: {
+        type:String,
+        required:true,
+            },
+            userimage:{
+                type:String
+             },
+         date: {
+        type:Date,
+        default:Date.now,
+                },
+             available:{
+             type:Boolean,
+                 default:true,
+                         },
+        
+           userrequest:{
+                type:String
+                        }               
+
+
+
+        
+    })
+
+
+
+
+    const Request = mongoose.model('request',{
+     
+       emailrq:{
+        type:String
+       },
+       email:{
+        type:String
+       },
+       price:{
+        type:Number,
+       
+       },
+       imagerq:{type:String},
+
+       productname:{
+        type:String
+       },
+       farmername:{type:String},
+       farmerimage:{type:String},
+       id:{
+        type:Number
+       }
+   
+    })
+
+
+    const UserRequest = mongoose.model('userrequest',{
+        userId: { type: mongoose.Types.ObjectId, ref: 'user', required: true },
+        productId: { type: mongoose.Types.ObjectId, ref: 'product', required: true },
+        emailrq:{
+         type:String
+        },
+        id:{
+            type:String
+        },
+        email:{
+         type:String
+        },
+         emailq:{
+         type:String
+        },
+        username:{
+            type:String
+        },
+        productname:{
+            type:String
+        },
+        price:{
+         type:Number,
+        
+        },
+        imagerq:{type:String},
+ 
+        productname:{
+         type:String
+        }
+             
+    ,
+    carData:{
+        type:Object,   
+    },
+    date:{
+        type:Date,
+        default:Date.now,
+    },
+    description:{
+        type:String,
+    },
+    location:{
+        type:String,
+    },
+    productimage:{
+       type:String
+    },
+    userimage:{
+        type:String
+     },
+     farmername:{
+        type:String
+     },farmerimage:{
+        type:String
+     },
+
+    
+     })
+
+
+
+
+     
+    const Acceptance = mongoose.model('acceptance',{
+    
+        emailrq:{
+         type:String
+        },
+        id:{
+            type:Number
+        },
+        email:{
+         type:String
+        },
+         emailq:{
+         type:String
+        },
+        username:{
+            type:String
+        },
+        productname:{
+            type:String
+        },
+        price:{
+         type:Number,
+        
+        },
+        imagerq:{type:String},
+ 
+        productname:{
+         type:String
+        }
+             
+    ,
+    carData:{
+        type:Object,   
+    },
+    date:{
+        type:Date,
+        default:Date.now,
+    },
+    description:{
+        type:String,
+    },
+    location:{
+        type:String,
+    },
+    productimage:{
+       type:String
+    },
+    userimage:{
+        type:String
+     },
+     farmername:{
+        type:String
+     },
+     farmerimage:{
+        type:String
+     },
+     phonenumber:{
+        type:Number
+     }
+
+    
+     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //creatng api for add products
 app.post('/addproduct', async(req, res) => {
@@ -136,7 +382,7 @@ app.post('/addproduct', async(req, res) => {
         category: req.body.category,
         price:req.body.price,
         description:req.body.description,
-        user:req.body.email,
+        email:req.body.email,
 
     });
     console.log(product);
@@ -152,7 +398,18 @@ res.json({
 
 // creating api for remove products
 app.post('/removeproduct' , async(req, res)=> {
-    await Product.findOneAndDelete({id:req.body.id});
+    await UserProduct.findOneAndDelete({productid:req.body.productid});
+    console.log("Removed");
+    res.json({
+        success:true,
+        name: req.body.name,
+
+    })
+})
+// creating api for remove products
+app.post('/removerequest' , async(req, res)=> {
+    await UserRequest.findOneAndDelete({id:req.body.id});
+    await Request.findOneAndDelete({id:req.body.id});
     console.log("Removed");
     res.json({
         success:true,
@@ -163,7 +420,7 @@ app.post('/removeproduct' , async(req, res)=> {
 
 // creating api for get userproduct
 app.post('/userproduct', async (req, res)=> {
-    let products = await Product.find({user: req.body.email });
+    let products = await UserProduct.find({emailpr: req.body.emailpr });
     console.log("all product fetched")
     console.log(products)
     res.send(products)
@@ -171,12 +428,280 @@ app.post('/userproduct', async (req, res)=> {
 
 // creating api for get all_products
 app.get('/allproducts', async (req, res)=> {
-    let products = await Product.find({});
+    let products = await UserProduct.find({});
     console.log("all product fetched")
     res.send(products)
 });
 
+// API endpoint to fetch recent product
+app.get('/recentproduct', async (req, res) => {
+    try {
+      // Query MongoDB for the most recent product
+      const recentProduct = await UserProduct.find().sort({ date: -1 }).limit(6);
+      res.json(recentProduct);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server Error' });
+    }
+  });
 
+
+
+
+
+
+  
+//   ceate the user request for the product
+app.post("/request", async (req,res) => {
+ 
+    const request = new Request({
+        id:req.body.id,
+        emailrq:req.body.emailrq,
+        imagerq:req.body.image,
+        productname:req.body.name,
+        price:req.body.price,
+       email:req.body.email,
+       farmername:req.body.farmername,
+       farmerimage:req.body.farmerimage,
+        
+
+    })
+    console.log(request)
+    await request.save();
+    console.log("Saved")
+    res.json({
+        success:true,
+        name:req.body.name,
+    })
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/userrequest', async (req, res)=> {
+    try {
+        const users = await User.find({});
+        const userrequests = await Request.find({});
+    
+        
+        let userrq = [];
+
+
+        for (const user of users) {
+            for (const userrequest of userrequests){
+            if (user.email === userrequest.email) {
+              console.log(`User: ${user}, Product: ${userrequest}`);
+              
+              
+
+             const existinguserproduct = await UserRequest.findOne({  productId: userrequest._id, });
+             if(!existinguserproduct){
+                const userRequest = new UserRequest({
+                    userId: user._id,
+                    productId: userrequest._id,
+                    email:user.email ,
+                    emailq:userrequest.email ,
+                     emailrq:userrequest.emailrq ,
+                     username:user.name,
+                     farmername:userrequest.farmername,
+                     productname:userrequest.productname,
+                     userimage:user.image,
+                     farmerimage:userrequest.farmerimage,
+                     productimage:userrequest.imagerq,
+                    id:userrequest.id,
+                   
+                     price:userrequest.price,
+                     location:user.location,
+                       
+                    
+                   
+                 
+                  });
+                  userrq.push(userRequest.save());
+             }
+      
+
+
+            
+            }
+          };
+        };
+       
+        const savedUserProducts = await Promise.all(userrq);
+    
+        res.status(200).json(savedUserProducts);
+      } catch (error) {
+        res.status(500).send(error.message);
+      }
+})
+
+
+
+
+
+
+app.post('/requestlist', async (req, res)=> {
+    let requests = await UserRequest.find({emailrq: req.body.emailrq });
+    console.log("requested product")
+    console.log(requests)
+    res.send(requests)
+});
+
+app.post('/orderedlist', async (req, res)=> {
+    let requests = await UserRequest.find({email: req.body.email });
+    console.log("ordered product")
+    console.log(requests)
+    res.send(requests)
+});
+
+
+
+
+
+
+
+
+app.post('/acceptance', async(req, res)=> {
+    
+
+
+  
+        const userRequest = new Acceptance({
+        
+            email:req.body.email,
+            emailrq:req.body.emailrq,
+             username:req.body.username,
+             farmername:req.body.farmername,
+             productname:req.body.productname,
+             farmerimage:req.body.farmerimage,
+             productimage:req.body.productimage,
+             id:req.body.id,
+           
+             price:req.body.price,
+            phonenumber:req.body.phonenumber,
+               
+            
+           
+         
+          });
+          console.log(userRequest)
+          await userRequest.save();
+          console.log("Saved acce")
+          res.json({
+              success:true,
+              name:req.body.name,
+          })
+
+    }
+)
+
+
+
+
+
+app.post('/accepted', async (req, res)=> {
+    let accept = await Acceptance.find({email: req.body.email });
+    console.log("accepted product")
+    console.log(accept)
+    res.send(accept)
+});
+
+
+app.post('/removeaccepted' , async(req, res)=> {
+
+    await Acceptance.findOneAndDelete({id:req.body.id});
+    console.log("Removed");
+    res.json({
+        success:true,
+        name: req.body.name,
+
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/userpro', async (req, res)=> {
+    try {
+        const users = await User.find({});
+        const products = await Product.find({});
+    
+        
+        let userProducts = [];
+
+
+        for (const user of users) {
+            for (const product of products){
+            if (user.email === product.email) {
+              console.log(`User: ${user}, Product: ${product}`);
+              
+              
+
+             const existinguserproduct = await UserProduct.findOne({  productId: product._id, });
+             if(!existinguserproduct){
+                const userProduct = new UserProduct({
+                    userId: user._id,
+                    productId: product._id,
+                    email: user.email,
+                     emailpr:product.email ,
+                     username:user.name,
+                     productname:product.name,
+                     userimage:user.image,
+                     productimage:product.image,
+                     productid:product.id,
+                     category:product.category   ,
+                     price:product.price,
+                     location:user.location,
+                       description:product.description,
+                      date:product.date ,
+                      available:product.available,
+                     
+                    // add other fields as necessary
+                  });
+                  userProducts.push(userProduct.save());
+             }
+      
+
+
+            
+            }
+          };
+        };
+       
+        const savedUserProducts = await Promise.all(userProducts);
+    
+        res.status(200).json(savedUserProducts);
+      } catch (error) {
+        res.status(500).send(error.message);
+      }
+})
 
 
 
